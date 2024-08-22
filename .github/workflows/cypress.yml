@@ -1,0 +1,26 @@
+name: Cypress Tests
+on:
+  push:
+    branches: [staging, main]
+  pull_request:
+    branches: [staging, main]
+  workflow_dispatch:
+    inputs:
+      cypress_flag:
+        description: 'add cypress flag if needed'
+        required: false
+        default: ' '
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/included:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+      - name: Run Cypress tests
+        run: npx cypress run ${{ inputs.cypress_flag }}
